@@ -12,10 +12,9 @@ To get started with ALZ Bicep, please refer to the [Deployment Flow wiki page][w
 2. High-level deployment flow.
 3. Links to more detailed instructions on individual modules.
 
-
  [//]: # (************************)
  [//]: # (INSERT LINK LABELS BELOW)
  [//]: # (************************)
 
-[caf_alz_architecture]:                            https://docs.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/#azure-landing-zone-conceptual-architecture "CAF - ALZ Accelerator"
+[caf_alz_architecture]:                            https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/#azure-landing-zone-conceptual-architecture "CAF - ALZ Accelerator"
 [wiki_deployment_flow]:                            https://github.com/Azure/ALZ-Bicep/wiki/DeploymentFlow "Wiki - Deployment Flow"

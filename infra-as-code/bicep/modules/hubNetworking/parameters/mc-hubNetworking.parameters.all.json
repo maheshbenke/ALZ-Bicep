@@ -18,15 +18,27 @@
       "value": [
         {
           "name": "AzureBastionSubnet",
-          "ipAddressRange": "10.20.0.0/24"
+          "ipAddressRange": "10.20.0.0/24",
+          "networkSecurityGroupId": "",
+          "routeTableId": ""
         },
         {
           "name": "GatewaySubnet",
-          "ipAddressRange": "10.20.254.0/24"
+          "ipAddressRange": "10.20.254.0/24",
+          "networkSecurityGroupId": "",
+          "routeTableId": ""
         },
         {
           "name": "AzureFirewallSubnet",
-          "ipAddressRange": "10.20.255.0/24"
+          "ipAddressRange": "10.20.255.0/24",
+          "networkSecurityGroupId": "",
+          "routeTableId": ""
+        },
+        {
+          "name": "AzureFirewallManagementSubnet",
+          "ipAddressRange": "10.20.253.0/24",
+          "networkSecurityGroupId": "",
+          "routeTableId": ""
         }
       ]
     },
@@ -36,6 +48,12 @@
     "parPublicIpSku": {
       "value": "Standard"
     },
+    "parPublicIpPrefix": {
+      "value": ""
+    },
+    "parPublicIpSuffix": {
+      "value": "-PublicIP"
+    },
     "parAzBastionEnabled": {
       "value": true
     },
@@ -44,6 +62,9 @@
     },
     "parAzBastionSku": {
       "value": "Standard"
+    },
+    "parAzBastionTunneling": {
+      "value": false
     },
     "parAzBastionNsgName": {
       "value": "nsg-AzureBastionSubnet"
@@ -66,6 +87,9 @@
     "parAzFirewallTier": {
       "value": "Standard"
     },
+    "parAzFirewallIntelMode": {
+      "value": "Alert"
+    },
     "parAzFirewallAvailabilityZones": {
       "value": []
     },
@@ -78,8 +102,11 @@
     "parAzFirewallDnsProxyEnabled": {
       "value": true
     },
+    "parAzFirewallDnsServers": {
+      "value": []
+    },
     "parHubRouteTableName": {
-      "value": "alz-hub-routetable"
+      "value": "alz-hub-routetable-chinaeast2"
     },
     "parDisableBgpRoutePropagation": {
       "value": false
@@ -120,6 +147,12 @@
         "privatelink.redis.cache.chinacloudapi.cn"
       ]
     },
+    "parPrivateDnsZoneAutoMergeAzureBackupZone": {
+      "value": true
+    },
+    "parVpnGatewayEnabled": {
+      "value": true
+    },
     "parVpnGatewayConfig": {
       "value": {
         "name": "alz-Vpn-Gateway",
@@ -131,14 +164,17 @@
         "activeActive": false,
         "enableBgpRouteTranslationForNat": false,
         "enableDnsForwarding": false,
-        "asn": "65515",
         "bgpPeeringAddress": "",
         "bgpsettings": {
           "asn": "65515",
           "bgpPeeringAddress": "",
           "peerWeight": "5"
-        }
+        },
+        "vpnClientConfiguration": {}
       }
+    },
+    "parExpressRouteGatewayEnabled": {
+      "value": true
     },
     "parExpressRouteGatewayConfig": {
       "value": {
@@ -151,7 +187,6 @@
         "activeActive": false,
         "enableBgpRouteTranslationForNat": false,
         "enableDnsForwarding": false,
-        "asn": "65515",
         "bgpPeeringAddress": "",
         "bgpsettings": {
           "asn": "65515",
@@ -162,11 +197,65 @@
     },
     "parTags": {
       "value": {
-        "Environment": "POC"
+        "Environment": "Live"
       }
     },
     "parTelemetryOptOut": {
       "value": false
+    },
+    "parBastionOutboundSshRdpPorts": {
+      "value": [
+        "22",
+        "3389"
+      ]
+    },
+    "parGlobalResourceLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parVirtualNetworkLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parBastionLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parDdosLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parAzureFirewallLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parHubRouteTableLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parPrivateDNSZonesLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
+    },
+    "parVirtualNetworkGatewayLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Hub Networking Module."
+      }
     }
   }
 }

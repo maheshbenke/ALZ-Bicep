@@ -4,8 +4,8 @@ This module creates a virtual network peering connection between two virtual net
 
 **Peering Options Documentation:**
 
-- [https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering)
-- [https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering#create-a-peering](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering#create-a-peering)
+- [https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering)
+- [https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering#create-a-peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering#create-a-peering)
 
 Module deploys the following resources:
 
@@ -105,7 +105,7 @@ New-AzResourceGroup `
 
 # Parameters necessary for deployment
 $inputObject = @{
-  DeploymentName        = 'alz-vnetPeeringDeploy-{0}' -f (-join (Get-Date -Format 'yyyyMMddTHHMMssffffZ')[0..63])
+  DeploymentName        = -join ('alz-vnetPeeringDeploy-{0}' -f (Get-Date -Format 'yyyyMMddTHHMMssffffZ'))[0..63]
   ResourceGroupName     = "rg-$TopLevelMGPrefix-vnet-peering-001"
   TemplateFile          = "ALZ-Bicep/infra-as-code/bicep/modules/vnetPeering/vnetPeering.bicep"
   TemplateParameterFile = "infra-as-code/bicep/modules/vnetPeering/parameters/vnetPeering.parameters.all.json"
@@ -131,7 +131,7 @@ $TopLevelMGPrefix = "alz"
 
 # Parameters necessary for deployment
 $inputObject = @{
-  DeploymentName        = 'alz-vnetPeeringDeploy-{0}' -f (-join (Get-Date -Format 'yyyyMMddTHHMMssffffZ')[0..63])
+  DeploymentName        = -join ('alz-vnetPeeringDeploy-{0}' -f (Get-Date -Format 'yyyyMMddTHHMMssffffZ'))[0..63]
   ResourceGroupName     = "rg-$TopLevelMGPrefix-vnet-peering-001"
   TemplateFile          = "ALZ-Bicep/infra-as-code/bicep/modules/vnetPeering/vnetPeering.bicep"
   TemplateParameterFile = "infra-as-code/bicep/modules/vnetPeering/parameters/vnetPeering.parameters.all.json"

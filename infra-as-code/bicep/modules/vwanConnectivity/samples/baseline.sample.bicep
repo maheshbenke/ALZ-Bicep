@@ -20,23 +20,31 @@ module minimum_vwan_conn '../vwanConnectivity.bicep' = {
   name: 'minimum_vwan_conn'
   params: {
     parLocation: parLocation
-    parVirtualHubAddressPrefix: '10.100.0.0/23'
-    parAzFirewallTier: 'Standard'
     parVirtualHubEnabled: true
-    parVpnGatewayEnabled: true
-    parExpressRouteGatewayEnabled: true
-    parAzFirewallEnabled: true
-    parAzFirewallDnsProxyEnabled: true
+    parVirtualWanHubs: [ {
+        parVpnGatewayEnabled: true
+        parExpressRouteGatewayEnabled: true
+        parAzFirewallEnabled: true
+        parVirtualHubAddressPrefix: '10.100.0.0/23'
+        parHubLocation: 'centralus'
+        parHubRoutingPreference: 'ExpressRoute' //allowed values are 'ASPath','VpnGateway','ExpressRoute'
+        parVirtualRouterAutoScaleConfiguration: 2 //minimum capacity should be between 2 to 50
+        parVirtualHubRoutingIntentDestinations: []
+        parAzFirewallDnsProxyEnabled: true
+        parAzFirewallDnsServers: []
+        parAzFirewallIntelMode: 'Alert'
+        parAzFirewallTier: 'Standard'
+        parAzFirewallAvailabilityZones: [
+          '1'
+          '2'
+          '3'
+      ]
+      } ]
     parVirtualWanName: '${parCompanyPrefix}-vwan-${parLocation}'
-    parVirtualWanHubName: '${parCompanyPrefix}-vhub-${parLocation}'
-    parVpnGatewayName: '${parCompanyPrefix}-vpngw-${parLocation}'
-    parExpressRouteGatewayName: '${parCompanyPrefix}-ergw-${parLocation}'
-    parAzFirewallName: '${parCompanyPrefix}-fw-${parLocation}'
-    parAzFirewallAvailabilityZones: [
-      '1'
-      '2'
-      '3'
-    ]
+    parVirtualWanHubName: '${parCompanyPrefix}-vhub'
+    parVpnGatewayName: '${parCompanyPrefix}-vpngw'
+    parExpressRouteGatewayName: '${parCompanyPrefix}-ergw'
+    parAzFirewallName: '${parCompanyPrefix}-fw'
     parVirtualNetworkIdToLink: '/subscriptions/xxxxxxxxx-b761-4132-9ed1-2c90d07c4885/resourceGroups/rg-vnet/providers/Microsoft.Network/virtualNetworks/vnet'
 
     parAzFirewallPoliciesName: '${parCompanyPrefix}-azfwpolicy-${parLocation}'
@@ -65,6 +73,7 @@ module minimum_vwan_conn '../vwanConnectivity.bicep' = {
       'privatelink.azurecr.io'
       'privatelink.azure-devices.net'
       'privatelink.azure-devices-provisioning.net'
+      'privatelink.azuredatabricks.net'
       'privatelink.azurehdinsight.net'
       'privatelink.azurehealthcareapis.com'
       'privatelink.azurestaticapps.net'
@@ -87,7 +96,7 @@ module minimum_vwan_conn '../vwanConnectivity.bicep' = {
       'privatelink.gremlin.cosmos.azure.com'
       'privatelink.guestconfiguration.azure.com'
       'privatelink.his.arc.azure.com'
-      'privatelink.kubernetesconfiguration.azure.com'
+      'privatelink.dp.kubernetesconfiguration.azure.com'
       'privatelink.managedhsm.azure.net'
       'privatelink.mariadb.database.azure.com'
       'privatelink.media.azure.net'

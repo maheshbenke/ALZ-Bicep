@@ -1,6 +1,17 @@
 metadata name = 'ALZ Bicep - Private DNS Zones'
 metadata description = 'Module used to set up Private DNS Zones in accordance to Azure Landing Zones'
 
+type lockType = {
+  @description('Optional. Specify the name of lock.')
+  name: string?
+
+  @description('Optional. The lock settings of the service.')
+  kind: ('CanNotDelete' | 'ReadOnly' | 'None')
+
+  @description('Optional. Notes about this lock.')
+  notes: string?
+}
+
 @sys.description('The Azure Region to deploy the resources into.')
 param parLocation string = resourceGroup().location
 
@@ -20,6 +31,7 @@ param parPrivateDnsZones array = [
   'privatelink.azurecr.io'
   'privatelink.azure-devices.net'
   'privatelink.azure-devices-provisioning.net'
+  'privatelink.azuredatabricks.net'
   'privatelink.azurehdinsight.net'
   'privatelink.azurehealthcareapis.com'
   'privatelink.azurestaticapps.net'
@@ -42,7 +54,7 @@ param parPrivateDnsZones array = [
   'privatelink.gremlin.cosmos.azure.com'
   'privatelink.guestconfiguration.azure.com'
   'privatelink.his.arc.azure.com'
-  'privatelink.kubernetesconfiguration.azure.com'
+  'privatelink.dp.kubernetesconfiguration.azure.com'
   'privatelink.managedhsm.azure.net'
   'privatelink.mariadb.database.azure.com'
   'privatelink.media.azure.net'
@@ -74,11 +86,28 @@ param parPrivateDnsZones array = [
   'privatelink.webpubsub.azure.com'
 ]
 
+@sys.description('Set Parameter to false to skip the addition of a Private DNS Zone for Azure Backup.')
+param parPrivateDnsZoneAutoMergeAzureBackupZone bool = true
+
 @sys.description('Tags you would like to be applied to all resources in this module.')
 param parTags object = {}
 
 @sys.description('Resource ID of VNet for Private DNS Zone VNet Links.')
 param parVirtualNetworkIdToLink string = ''
+
+@sys.description('Resource ID of VNet for Failover Private DNS Zone VNet Links.')
+param parVirtualNetworkIdToLinkFailover string = ''
+
+@sys.description('''Resource Lock Configuration for Private DNS Zones.
+
+- `kind` - The lock settings of the service which can be CanNotDelete, ReadOnly, or None.
+- `notes` - Notes about this lock.
+
+''')
+param parResourceLockConfig lockType = {
+  kind: 'None'
+  notes: 'This lock was created by the ALZ Bicep Private DNS Zones Module.'
+}
 
 @sys.description('Set Parameter to true to Opt-out of deployment telemetry.')
 param parTelemetryOptOut bool = false
@@ -100,8 +129,12 @@ var varAzBackupGeoCodes = {
   eastus2: 'eus2'
   francecentral: 'frc'
   francesouth: 'frs'
+  germanycentral: 'gec'
   germanynorth: 'gn'
+  germanynortheast: 'gne'
   germanywestcentral: 'gwc'
+  israelcentral: 'ilc'
+  italynorth: 'itn'
   centralindia: 'inc'
   southindia: 'ins'
   westindia: 'inw'
@@ -115,6 +148,7 @@ var varAzBackupGeoCodes = {
   northeurope: 'ne'
   norwayeast: 'nwe'
   norwaywest: 'nww'
+  polandcentral: 'plc'
   qatarcentral: 'qac'
   southafricanorth: 'san'
   southafricawest: 'saw'
@@ -149,12 +183,10 @@ var varAzBackupGeoCodes = {
   chinaeast: 'sha'
   chinaeast2: 'sha2'
   chinaeast3: 'sha3'
-  germanycentral: 'gec'
-  germanynortheast: 'gne'
 }
 
 // If region entered in parLocation and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
-var varPrivateDnsZonesMerge = contains(varAzBackupGeoCodes, parLocation) ? union(parPrivateDnsZones, [ 'privatelink.${varAzBackupGeoCodes[toLower(parLocation)]}.backup.windowsazure.com' ]) : parPrivateDnsZones
+var varPrivateDnsZonesMerge = parPrivateDnsZoneAutoMergeAzureBackupZone && contains(varAzBackupGeoCodes, parLocation) ? union(parPrivateDnsZones, [ 'privatelink.${varAzBackupGeoCodes[toLower(parLocation)]}.backup.windowsazure.com' ]) : parPrivateDnsZones
 
 // Customer Usage Attribution Id
 var varCuaid = '981733dd-3195-4fda-a4ee-605ab959edb6'
@@ -163,6 +195,15 @@ resource resPrivateDnsZones 'Microsoft.Network/privateDnsZones@2020-06-01' = [fo
   name: privateDnsZone
   location: 'global'
   tags: parTags
+}]
+
+resource resPrivateDnsZonesLock 'Microsoft.Authorization/locks@2020-05-01' = [for (privateDnsZone, index) in varPrivateDnsZonesMerge: if (parResourceLockConfig.kind != 'None') {
+  scope: resPrivateDnsZones[index]
+  name: parResourceLockConfig.?name ?? '${privateDnsZone}-lock'
+  properties: {
+    level: parResourceLockConfig.kind
+    notes: parResourceLockConfig.?notes ?? ''
+  }
 }]
 
 resource resVirtualNetworkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = [for privateDnsZoneName in varPrivateDnsZonesMerge: if (!empty(parVirtualNetworkIdToLink)) {
@@ -175,6 +216,38 @@ resource resVirtualNetworkLink 'Microsoft.Network/privateDnsZones/virtualNetwork
     }
   }
   dependsOn: resPrivateDnsZones
+  tags: parTags
+}]
+
+resource resVirtualNetworkLinkLock 'Microsoft.Authorization/locks@2020-05-01' = [for (privateDnsZone, index) in varPrivateDnsZonesMerge: if (!empty(parVirtualNetworkIdToLink) && !empty(parResourceLockConfig ?? {}) && parResourceLockConfig.kind != 'None') {
+  scope: resVirtualNetworkLink[index]
+  name: parResourceLockConfig.?name ?? 'link-${uniqueString(parVirtualNetworkIdToLink)}-${privateDnsZone}-lock'
+  properties: {
+    level: parResourceLockConfig.kind
+    notes: parResourceLockConfig.?notes ?? ''
+  }
+}]
+
+resource resVirtualNetworkLinkFailover 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = [for privateDnsZoneName in varPrivateDnsZonesMerge: if (!empty(parVirtualNetworkIdToLinkFailover)) {
+  name: '${privateDnsZoneName}/${take('fallbacklink-${uniqueString(parVirtualNetworkIdToLinkFailover)}', 80)}'
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: parVirtualNetworkIdToLinkFailover
+    }
+  }
+  dependsOn: resPrivateDnsZones
+  tags: parTags
+}]
+
+resource resVirtualNetworkLinkFailoverLock 'Microsoft.Authorization/locks@2020-05-01' = [for (privateDnsZone, index) in varPrivateDnsZonesMerge: if (!empty(parVirtualNetworkIdToLinkFailover) && !empty(parResourceLockConfig ?? {}) && parResourceLockConfig.kind != 'None') {
+  scope: resVirtualNetworkLinkFailover[index]
+  name: parResourceLockConfig.?name ?? 'failbacklink-${uniqueString(parVirtualNetworkIdToLink)}-${privateDnsZone}-lock'
+  properties: {
+    level: parResourceLockConfig.kind
+    notes: parResourceLockConfig.?notes ?? ''
+  }
 }]
 
 module modCustomerUsageAttribution '../../CRML/customerUsageAttribution/cuaIdResourceGroup.bicep' = if (!parTelemetryOptOut) {
@@ -187,3 +260,5 @@ output outPrivateDnsZones array = [for i in range(0, length(varPrivateDnsZonesMe
   name: resPrivateDnsZones[i].name
   id: resPrivateDnsZones[i].id
 }]
+
+output outPrivateDnsZonesNames array = [for i in range(0, length(varPrivateDnsZonesMerge)): resPrivateDnsZones[i].name]

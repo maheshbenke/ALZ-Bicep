@@ -22,6 +22,7 @@
         "privatelink.azurecr.io",
         "privatelink.azure-devices.net",
         "privatelink.azure-devices-provisioning.net",
+        "privatelink.azuredatabricks.net",
         "privatelink.azurehdinsight.net",
         "privatelink.azurehealthcareapis.com",
         "privatelink.azurestaticapps.net",
@@ -44,7 +45,7 @@
         "privatelink.gremlin.cosmos.azure.com",
         "privatelink.guestconfiguration.azure.com",
         "privatelink.his.arc.azure.com",
-        "privatelink.kubernetesconfiguration.azure.com",
+        "privatelink.dp.kubernetesconfiguration.azure.com",
         "privatelink.managedhsm.azure.net",
         "privatelink.mariadb.database.azure.com",
         "privatelink.media.azure.net",
@@ -76,13 +77,19 @@
         "privatelink.webpubsub.azure.com"
       ]
     },
+    "parPrivateDnsZoneAutoMergeAzureBackupZone": {
+      "value": true
+    },
     "parTags": {
       "value": {
-        "Environment": "POC"
+        "Environment": "Live"
       }
     },
     "parVirtualNetworkIdToLink": {
       "value": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxxxxx/providers/Microsoft.Network/virtualNetworks/xxxxxxxxxxx"
+    },
+    "parVirtualNetworkIdToLinkFailover": {
+      "value": ""
     },
     "parTelemetryOptOut": {
       "value": false

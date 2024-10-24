@@ -12,6 +12,20 @@
       }
     }
   },
+  "azurePolicyForKubernetes": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('enableAscForContainers')]"
+      }
+    }
+  },
+  "defenderForApis": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('enableAscForApis')]"
+      }
+    }
+  },
   "defenderForAppServices": {
     "parameters": {
       "effect": {
@@ -40,6 +54,13 @@
       }
     }
   },
+  "defenderForCspm": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('enableAscForCspm')]"
+      }
+    }
+  },
   "defenderForDns": {
     "parameters": {
       "effect": {
@@ -49,8 +70,18 @@
   },
   "defenderForKeyVaults": {
     "parameters": {
-      "Effect": {
+      "effect": {
         "value": "[[parameters('enableAscForKeyVault')]"
+      }
+    }
+  },
+  "defenderforKubernetes": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('enableAscForContainers')]"
+      },
+      "logAnalyticsWorkspaceResourceId": {
+        "value": "[[parameters('logAnalytics')]"
       }
     }
   },
@@ -75,7 +106,7 @@
       }
     }
   },
-  "defenderForStorageAccounts": {
+  "defenderForStorageAccountsV2": {
     "parameters": {
       "effect": {
         "value": "[[parameters('enableAscForStorage')]"
@@ -88,6 +119,19 @@
         "value": "[[parameters('enableAscForServers')]"
       }
     }
+  },
+  "defenderForVMVulnerabilityAssessment": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('enableAscForServersVulnerabilityAssessments')]"
+      },
+      "vaType": {
+        "value": "[[parameters('vulnerabilityAssessmentProvider')]"
+      }
+    }
+  },
+  "migrateToMdeTvm": {
+    "parameters": {}
   },
   "securityEmailContact": {
     "parameters": {

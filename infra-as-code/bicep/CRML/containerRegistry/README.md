@@ -8,14 +8,7 @@ Module deploys the following resources:
 
 ## Parameters
 
-The module requires the following inputs:
-
- | Parameter   | Type   | Default                                | Description                                                     | Requirement                  | Example                         |
- | ----------- | ------ | -------------------------------------- | --------------------------------------------------------------- | ---------------------------- | ------------------------------- |
- | parAcrName  | string | acr${uniqueString(resourceGroup().id)} | Name of Azure Container Registry to deploy                      | 5-50 char                    | acr5cix6w3rcizn                 |
- | parACRSku   | string | Basic                                  | SKU of Azure Container Registry to deploy to Azure              | Basic or Standard or Premium | Basic                           |
- | parLocation | string | resourceGroup().location               | Location where Public Azure Container Registry will be deployed | Valid Azure Region           | eastus2                         |
- | parTags     | object | none                                   | Tags to be appended to resource                                 | none                         | {"Environment" : "Development"} |
+- [Parameters for Azure Commercial Cloud](generateddocs/containerRegistry.bicep.md)
 
 ## Outputs
 
@@ -55,7 +48,7 @@ New-AzResourceGroup -Name 'rg-bicep-acr' `
   -Location 'EastUs'
 
   $inputObject = @{
-  DeploymentName        = 'alz-ContainerRegistry-{0}' -f (-join (Get-Date -Format 'yyyyMMddTHHMMssffffZ')[0..63])
+  DeploymentName        = -join ('alz-ContainerRegistry-{0}' -f (Get-Date -Format 'yyyyMMddTHHMMssffffZ'))[0..63]
   ResourceGroupName     = 'rg-bicep-acr'
   TemplateParameterFile = 'infra-as-code/bicep/CRML/containerRegistry/parameters/containerRegistry.parameters.all.json'
   TemplateFile          = "infra-as-code/bicep/CRML/containerRegistry/containerRegistry.bicep"

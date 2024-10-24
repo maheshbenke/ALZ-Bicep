@@ -13,13 +13,6 @@
       }
     }
   },
-  "APIAppServiceLatestTlsEffect": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('APIAppServiceLatestTlsEffect')]"
-      }
-    }
-  },
   "AppServiceHttpEffect": {
     "parameters": {
       "effect": {
@@ -34,6 +27,13 @@
       },
       "minTlsVersion": {
         "value": "[[parameters('AppServiceminTlsVersion')]"
+      }
+    }
+  },
+  "ContainerAppsHttpsOnlyEffect": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('ContainerAppsHttpsOnlyEffect')]"
       }
     }
   },

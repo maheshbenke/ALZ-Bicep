@@ -1,7 +1,7 @@
 {
   "name": "Deny-AppGW-Without-WAF",
   "type": "Microsoft.Authorization/policyAssignments",
-  "apiVersion": "2019-09-01",
+  "apiVersion": "2024-04-01",
   "properties": {
     "description": "Deny creation of App Gateway without WAF.",
     "displayName": "Deny-AppGW-Without-WAF",
@@ -11,7 +11,7 @@
         "value": "deny"
       }
     },
-    "policyDefinitionId": "${modManagementGroups.outputs.outTopLevelManagementGroupId}/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF",
+    "policyDefinitionId": "${varTopLevelManagementGroupResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF",
     "scope": null,
     "enforcementMode": "Default"
   },

@@ -10,20 +10,11 @@ It also enables Diagnostic Settings for existing custom child landing zones if t
 
 ## Parameters
 
-The module requires the following inputs:
+- [Parameters for Azure Commercial Cloud](generateddocs/mgDiagSettingsAll.bicep.md)
 
-| Parameter                             | Type   | Description                                                                                                                                                                          | Requirements                      | Example                                                                                 |
-| ------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------- |
-| parTopLevelManagementGroupPrefix      | string | Prefix for the management group hierarchy.  This management group will be created as part of the deployment.                                                                         | 2-10 characters                   | `alz`                                                                                   |
-| parLandingZoneMgAlzDefaultsEnable     | bool   | Deploys Corp & Online Management Groups beneath Landing Zones Management Group if set to true.                                                                                       | Mandatory input, default: `true`  | `true`                                                                                  |
-| parLandingZoneMgConfidentialEnable    | bool   | Deploys Confidential Corp & Confidential Online Management Groups beneath Landing Zones Management Group if set to true.                                                             | Mandatory input, default: `false` | `false`                                                                                 |
-| parLogAnalyticsWorkspaceResourceId | string   | Resource ID of the Log Analytics Workspace                                                             | Mandatory input | `/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/alz-logging/providers/Microsoft.OperationalInsights/workspaces/alz-log-analytics` |
-| parLandingZoneMgChildren              | array | Array of strings to allow additional child Management Groups of Landing Zones Management Group to be deployed.                                                         | Not required input, default `[]`  | {"value": ["pci","another-example"]}                                                         |
-| parTelemetryOptOut                    | bool   | Set Parameter to true to Opt-out of deployment telemetry                                                                                                                             | Mandatory input, default: `false` | `false`                                                                                 |
+### Diagnostic Settings for Child Landing Zone and Platform Management Groups
 
-### Diagnostic Settings for Child Landing Zone Management Groups
-
-This module considers the same flexibility used when creating the child Landing Zone Management Groups during deployment of the Management Groups module. The three parameters detailed below should correspond to the values used during Management Groups module deployment. All of these parameters can be used together to enable diagnostic settings on the child Landing Zone Management Groups.
+This module considers the same flexibility used when creating the child Landing Zone and child Platform Management Groups during deployment of the Management Groups module. The parameters detailed below should correspond to the values used during Management Groups module deployment. All of these parameters can be used together to enable diagnostic settings on the child Landing Zone Management Groups.
 
 - `parLandingZoneMgAlzDefaultsEnable`
   - Boolean - defaults to `true`
@@ -42,8 +33,12 @@ This module considers the same flexibility used when creating the child Landing 
   - Object - default is an empty array `[]`
   - **Optional**
   - Deploys whatever you specify in the object as child Landing Zone Management groups.
+- `parPlatformMgChildren`
+  - Object - default is an empty array `[]`
+  - **Optional**
+  - Deploys whatever you specify in the object as child Landing Zone Management groups.
 
-#### `parLandingZoneMgChildren` Input Examples
+#### `parLandingZoneMgChildren` and `parPlatformMgChildren` Input Examples
 
 Below are some examples of how to use this input parameter in both Bicep & JSON formats.
 
@@ -54,6 +49,11 @@ parLandingZoneMgChildren = [
   'pci',
   'another-example'
 ]
+
+parPlatformMgChildren = [
+  'security',
+  'yet-another-example'
+]
 ```
 
 ##### JSON Parameter File Input Example
@@ -63,6 +63,12 @@ parLandingZoneMgChildren = [
       "value": [
         "pci",
         "another-example"
+    ]
+  },
+    "parPlatformMgChildren": {
+      "value": [
+        "security",
+        "yet-another-example"
     ]
   }
 ```
@@ -76,6 +82,38 @@ parLandingZoneMgChildren = [
 In this example, the Diagnostic Settings are enabled on the management groups through a managementGroup-scoped deployment.
 
 > For the examples below we assume you have downloaded or cloned the Git repo as-is and are in the root of the repository as your selected directory in your terminal of choice.
+
+You will also need to ensure you have the Microsoft.Insights resource provider registered in the Management subscription.
+
+You can utilize this script to check if the resource provider is registered, and if not, register it:
+```powershell
+# Registering 'Microsoft.Insights' resource provider on the Management subscription
+Select-AzSubscription -SubscriptionId $ManagementSubscriptionId
+
+$providers = @('Microsoft.insights')
+
+foreach ($provider in $providers ) {
+  $iterationCount = 0
+  $maxIterations = 30
+  $providerStatus = (Get-AzResourceProvider -ListAvailable | Where-Object ProviderNamespace -eq $provider).registrationState
+  if ($providerStatus -ne 'Registered') {
+    Write-Output "`n Registering the '$provider' provider"
+    Register-AzResourceProvider -ProviderNamespace $provider
+    do {
+      $providerStatus = (Get-AzResourceProvider -ListAvailable | Where-Object ProviderNamespace -eq $provider).registrationState
+      $iterationCount++
+      Write-Output "Waiting for the '$provider' provider registration to complete....waiting 10 seconds"
+      Start-Sleep -Seconds 10
+    } until ($providerStatus -eq 'Registered' -and $iterationCount -ne $maxIterations)
+    if ($iterationCount -ne $maxIterations) {
+      Write-Output "`n The '$provider' has been registered successfully"
+    }
+    else {
+      Write-Output "`n The '$provider' has not been registered successfully"
+    }
+  }
+}
+```
 
 ### Azure CLI
 

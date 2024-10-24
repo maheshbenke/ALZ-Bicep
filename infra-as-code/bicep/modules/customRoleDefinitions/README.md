@@ -1,6 +1,6 @@
 # Module:  Custom Role Definitions
 
-This module defines custom roles based on the recommendations from the Azure Landing Zone Conceptual Architecture.  The role definitions are defined in [Identity and access management](https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/identity-and-access-management) recommendations.
+This module defines custom roles based on the recommendations from the Azure Landing Zone Conceptual Architecture.  The role definitions are defined in [Identity and access management](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/identity-and-access-management) recommendations.
 
 Module supports the following custom roles:
 
@@ -9,7 +9,7 @@ Module supports the following custom roles:
 - [*ManagementGroupId] Network management (NetOps)
 - [*ManagementGroupId] Security operations (SecOps)
 
-*The custom role names are prefixed with `[ManagementGroupId]` since custom roles scoped at Management Group level must be unique within the Azure AD tenant. This will alleviate any conflicts if you chose to deploy a [canary environment](https://aka.ms/alz/canary).
+*The custom role names are prefixed with `[ManagementGroupId]` since custom roles scoped at Management Group level must be unique within the Microsoft Entra tenant. This will alleviate any conflicts if you chose to deploy a [canary environment](https://aka.ms/alz/canary).
 For example, if the `ManagementGroupId` = **alz**, then each role will have this prefix **[alz]** like `[alz] Subscription owner`. See the [example output deployment](#example-deployment-output) below.
 
 ## Parameters
@@ -87,7 +87,7 @@ az deployment mg create --name ${NAME:0:63} --location $LOCATION --management-gr
 # For Azure global regions
 
 $inputObject = @{
-  DeploymentName        = 'alz-CustomRoleDefsDeployment-{0}' -f (-join (Get-Date -Format 'yyyyMMddTHHMMssffffZ')[0..63])
+  DeploymentName        = -join ('alz-CustomRoleDefsDeployment-{0}' -f (Get-Date -Format 'yyyyMMddTHHMMssffffZ'))[0..63]
   Location              = 'eastus'
   ManagementGroupId     = 'alz'
   TemplateFile          = "infra-as-code/bicep/modules/customRoleDefinitions/customRoleDefinitions.bicep"
@@ -101,7 +101,7 @@ OR
 # For Azure China regions
 
 $inputObject = @{
-  DeploymentName        = 'alz-CustomRoleDefsDeployment-{0}' -f (-join (Get-Date -Format 'yyyyMMddTHHMMssffffZ')[0..63])
+  DeploymentName        = -join ('alz-CustomRoleDefsDeployment-{0}' (Get-Date -Format 'yyyyMMddTHHMMssffffZ'))[0..63]
   Location              = 'chinaeast2'
   ManagementGroupId     = 'alz'
   TemplateFile          = "infra-as-code/bicep/modules/customRoleDefinitions/mc-customRoleDefinitions.bicep"

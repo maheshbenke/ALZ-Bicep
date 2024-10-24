@@ -26,19 +26,11 @@ module baseline_logging '../logging.bicep' = {
     parLogAnalyticsWorkspaceName: 'alz-log-analytics'
     parLogAnalyticsWorkspaceSkuName: 'PerGB2018'
     parLogAnalyticsWorkspaceSolutions: [
-      'AgentHealthAssessment'
-      'AntiMalware'
-      'ChangeTracking'
-      'Security'
       'SecurityInsights'
-      'ServiceMap'
-      'SQLAdvancedThreatProtection'
-      'SQLVulnerabilityAssessment'
-      'SQLAssessment'
-      'Updates'
-      'VMInsights'
     ]
+    parUserAssignedManagedIdentityName: 'alz-umi-identity'
     parAutomationAccountName: 'alz-automation-account'
+    parAutomationAccountUseManagedIdentity: true
     parTelemetryOptOut: false
   }
 }

@@ -69,6 +69,9 @@
       "logAnalytics": {
         "value": "[[parameters('logAnalytics')]"
       },
+      "logAnalyticsDestinationType": {
+        "value": "[[parameters('APIMgmtLogAnalyticsDestinationType')]"
+      },
       "effect": {
         "value": "[[parameters('APIMgmtLogAnalyticsEffect')]"
       },
@@ -341,6 +344,9 @@
     "parameters": {
       "logAnalytics": {
         "value": "[[parameters('logAnalytics')]"
+      },
+      "logAnalyticsDestinationType": {
+        "value": "[[parameters('FirewallLogAnalyticsDestinationType')]"
       },
       "effect": {
         "value": "[[parameters('FirewallLogAnalyticsEffect')]"
@@ -701,6 +707,19 @@
       }
     }
   },
+  "StorageAccountBlobServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "StorageAccountDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {
@@ -708,6 +727,48 @@
       },
       "effect": {
         "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "StorageAccountFileServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "StorageAccountQueueServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "StorageAccountTableServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },
@@ -796,6 +857,19 @@
       },
       "effect": {
         "value": "[[parameters('VNetGWLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VWanS2SVPNGWDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('VWanS2SVPNGWLogAnalyticsEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
